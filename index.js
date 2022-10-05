@@ -8,6 +8,7 @@ const {Server: SocketServer} = require('socket.io'); //Importamos el modulo sock
 const path = require('path');
 const {engine} = require('express-handlebars');
 const apiRoutes = require('./routers/routers');
+const fs = require("fs");                           //Importamos el modulo file System
 
 //A continuacion la configuración básica de un servidor http con socket en conjunto
 const PORT = process.env.PORT || 8080;              //Configuramos el puerto por la variable de entorno O por el 8080
@@ -26,13 +27,6 @@ app.engine('hbs', engine({
 app.set('views','./views');                 //Indicamos a express la ruta de nuestra plantilla
 app.set('view engine', 'hbs');              //Indicamos a express el motor de plantillas a usar
 
-const messages = [
-    {author: "Marco", text: "Hadouken"},
-    {author: "Enrique", text: "Me lleva la..."},
-    {author: "JS", text: "Café americano"},
-];
-
-
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -40,6 +34,9 @@ app.use(express.static("./public"));                //Archivos estaticos
 
 //Routes
 app.use('/api', apiRoutes);                 //Ruta a routers.js con prefijo /api
+
+//Variables y arreglos
+const messages = [];                        //arreglo vacio para ir almacenando en memoria los mensajes del chat
 
 //Listen
 httpServer.listen(PORT, ()=> {
@@ -50,9 +47,20 @@ httpServer.listen(PORT, ()=> {
 
 // El metodo on, escuchara por el evento 'connection'
 io.on('connection', (socket)=> {
-    console.log("New client connection! (nuevo cliente conectado)");          //Muestra mensaje en la consola cuando se conecta un nuevo cliente
-    console.log(socket.id);                         //Muestra por consola el id del nuevo cliente conectado.
-    console.log(messages);
+    console.log("New client connection! (nuevo cliente conectado)");            //Muestra mensaje en la consola cuando se conecta un nuevo cliente
+    console.log(socket.id);                                                     //Muestra por consola el id del nuevo cliente conectado.
+    //console.log(messages);
+ 
 
-    socket.emit('messages', messages);                                   //AQUI TIENE QUE IR LA LOGICA PARA MANDAR LA TABLA DE PRODUCTOS??
+    socket.emit('messages', messages);                                          //AQUI TIENE QUE IR LA LOGICA PARA MANDAR LA TABLA DE PRODUCTOS??
+
+    //Escucha por los mensajes emitido por el lado del cliente con el metodo on
+    socket.on('new-message',data => {
+
+        messages.push(data);
+        io.sockets.emit('messages', messages);
+        fs.writeFileSync("./chat_data_log/chat_log.json", JSON.stringify(messages));        //Escribe el log del chat en un archivo
+
+    });
+
 })

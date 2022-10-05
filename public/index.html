@@ -14,7 +14,7 @@
             <script src="/socket.io/socket.io.js"></script>     <!-- Este script está dentro de la carpeta socket.io que se genera al instalar socket-->
             <script src="./main.js"></script>                   <!-- Este es nuestro cript con la logica del cliente-->
 
-            <form action="/api/productos" method="post">
+            <form action="/api/productos" method="post">                        <!--Formulario para añadir productos-->
                 <label for="title">Titulo del producto:</label>
                 <input type="text" name="title" id="title"><br>
 
@@ -24,20 +24,26 @@
                 <label for="thumbnail">Url imagen del producto</label>
                 <input type="text" name="thumbnail" id="thumbnail"><br>
 
-                <input type="submit" value="Agregar producto">
+                <input type="submit" value="Agregar producto">                      <!--Boton para agregar productos-->
             </form>
             <form action="/api/productos" method="get">
                 <input type="submit" value="Ver productos">
             </form>
         </div>
-        <br>
+
         <div>
             <h3>Tabla de productos</h3>
         </div>
         <br>
         <div id="chat">
-            <h2>Chat!</h2>
+            <h3>Chat!!</h3>                                                 <!-- Encabezado del chat-->
+            <form onsubmit="return addMessage(this)">                       <!-- Formulario del chat-->
+                <input type="text" id="username" placeholder="Tu email" >
+                <input type="text" id="texto" placeholder="Cuéntanos algo...">
+                <input type="submit" id="botonEnviar" value="Enviar">
+            </form>
         </div>
+        <div id="mensajeria"></div>                                         <!--Espacio donde se muestran los mensajes del chat-->
     </div>
 </body>
 </html>

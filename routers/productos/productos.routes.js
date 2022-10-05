@@ -35,7 +35,7 @@ router.get('/:id', (req, res) => {
 
 //Recibe y agrega un producto
 router.post('/', (req,res) => {
-   console.log (req.body);
+   console.log (req.body);                                          //Muestra en consola del servidor el body de la petición POST
     //res.status(201).json(api.addNew(req.body));
     api.addNew(req.body);                                           //Tomamos el cuerpo de la peticion POST y lo pasamos como parametro a el objeto de la 
                                                                     // clase API, para ser añadido al arreglo de objetos productos
