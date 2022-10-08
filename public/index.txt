@@ -13,10 +13,8 @@
 
             <script src="/socket.io/socket.io.js"></script>     <!-- Este script está dentro de la carpeta socket.io que se genera al instalar socket-->
             <script src="./main.js"></script>                   <!-- Este es nuestro script con la logica del cliente-->
-            <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>   <!-- Handlebars desde un CDN-->
 
-            <!-- <form action="/api/productos" method="post">                        -Formulario para añadir productos-->
-            <form onsubmit="return addProducto(this)">
+            <form action="/api/productos" method="post">                        <!--Formulario para añadir productos-->
                 <label for="title">Titulo del producto:</label>
                 <input type="text" name="title" id="title"><br>
 
@@ -28,12 +26,16 @@
 
                 <input type="submit" value="Agregar producto">                      <!--Boton para agregar productos-->
             </form>
-            
+            <form action="/api/productos" method="get">
+                <input type="submit" value="Ver productos">
+            </form>
         </div>
 
-        <div id="plantillaProductos">                                       <!-- Aquí en este div, se inyecta la plantillaProductos de handlebars-->
-            
-                
+        <div>
+            <h3>Tabla de productos</h3>
+                <script>
+                   
+                </script>
         </div>
         <br>
         <div id="chat">

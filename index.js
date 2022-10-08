@@ -35,6 +35,10 @@ app.use(express.static("./public"));                //Archivos estaticos
 //Routes
 app.use('/api', apiRoutes);                 //Ruta a routers.js con prefijo /api
 
+//clases importadas
+const API = require('./api/api');           //Importamos la clase API
+const api = new API();                      //Nueva instancia de la clase API
+
 //Variables y arreglos
 const messages = [];                        //arreglo vacio para ir almacenando en memoria los mensajes del chat
 
@@ -47,13 +51,14 @@ httpServer.listen(PORT, ()=> {
 
 // El metodo on, escuchara por el evento 'connection'
 io.on('connection', (socket)=> {
+    
     console.log("New client connection! (nuevo cliente conectado)");            //Muestra mensaje en la consola cuando se conecta un nuevo cliente
     console.log(socket.id);                                                     //Muestra por consola el id del nuevo cliente conectado.
     //console.log(messages);
- 
-
-    socket.emit('messages', messages);                                          //AQUI TIENE QUE IR LA LOGICA PARA MANDAR LA TABLA DE PRODUCTOS??
-
+     
+    socket.emit('messages', messages);                                          //
+    socket.emit('productos', api.getAll());                                       //Emite un evento llamado productos, que manda como parametro la lista de productos
+    
     //Escucha por los mensajes emitido por el lado del cliente con el metodo on
     socket.on('new-message',data => {
 
@@ -61,6 +66,14 @@ io.on('connection', (socket)=> {
         io.sockets.emit('messages', messages);
         fs.writeFileSync("./chat_data_log/chat_log.json", JSON.stringify(messages));        //Escribe el log del chat en un archivo
 
+    });
+
+    //Escucha por los cambios en la tabla de productos      
+    socket.on('cambio-tabla-productos',data => {
+
+        api.addNew(data);
+        io.sockets.emit('productos', api.getAll());
+        
     });
 
 })
